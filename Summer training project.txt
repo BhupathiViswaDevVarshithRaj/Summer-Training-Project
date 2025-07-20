@@ -1,0 +1,118 @@
+class Book:
+    def __init__(self, title, author, isbn):
+        self.title = title
+        self.author = author
+        self.isbn = isbn
+        self.checked_out = False
+        self.borrower = None
+
+    def __str__(self):
+        status = "Checked Out" if self.checked_out else "Available"
+        borrower_info = f" by {self.borrower}" if self.borrower else ""
+        return f"ISBN: {self.isbn} | Title: {self.title} | Author: {self.author} | Status: {status}{borrower_info}"
+
+
+class Library:
+    def __init__(self):
+        self.books = {}
+
+    def add_book(self, title, author, isbn, silent=False):
+        if isbn in self.books:
+            if not silent:
+                print("A book with this ISBN already exists.")
+                return False
+        else:
+            self.books[isbn] = Book(title, author, isbn)
+            if not silent:
+                print(f"Added '{title}' by {author} to the library.")
+                return True
+
+    def view_books(self):
+        if not self.books:
+            print("The library has no books.")
+        else:
+            for book in self.books.values():
+                print(book)
+
+    def check_out_book(self, isbn, borrower):
+        book = self.books.get(isbn)
+        if not book:
+            print("Book not found.")
+        elif book.checked_out:
+            print(f"Book '{book.title}' is already checked out.")
+        else:
+            book.checked_out = True
+            book.borrower = borrower
+            print(f"Book '{book.title}' has been checked out to {borrower}.")
+
+    def return_book(self, isbn):
+        book = self.books.get(isbn)
+        if not book:
+            print("Book not found.")
+        elif not book.checked_out:
+            print(f"Book '{book.title}' is already in the library.")
+        else:
+            book.checked_out = False
+            borrower = book.borrower
+            book.borrower = None
+            print(f"Thank you! '{book.title}' has been returned by {borrower}.")
+
+
+def main():
+    library = Library()
+
+    
+    library.add_book("Harry Potter and the Philosopher's Stone", "J.K. Rowling", "9780747532743", silent=True)
+    library.add_book("Harry Potter and the Chamber of Secrets", "J.K. Rowling", "9780747538486", silent=True)
+    library.add_book("Harry Potter and the Prisoner of Azkaban", "J.K. Rowling", "9780747542155", silent=True)
+    library.add_book("Harry Potter and the Goblet of Fire", "J.K. Rowling", "9780747550990", silent=True)
+    library.add_book("Harry Potter and the Order of the Phoenix", "J.K. Rowling", "9780747581086", silent=True)
+    library.add_book("Harry Potter and the Half-Blood Prince", "J.K. Rowling", "9780747584667", silent=True)
+    library.add_book("Harry Potter and the Deathly Hallows", "J.K. Rowling", "9780747591054", silent=True)
+    library.add_book("Harry Potter and the Cursed Child", "J.K. Rowling", "9780751565355", silent=True)
+    library.add_book("Game of Thrones", "George R.R. Martin", "9780007428540", silent=True)
+    library.add_book("A Storm of Swords", "George R.R. Martin", "9780553573428", silent=True)
+    library.add_book("A Feast for Crows", "George R.R. Martin", "9780006486121", silent=True)
+    library.add_book("The Lord of the Rings", "J.R.R. Tolkien", "9780544003415", silent=True)
+    library.add_book("The Godfather", "Mario Puzo", "9780099528128", silent=True)
+    library.add_book("Dracula", "Bram Stoker", "9780141199337", silent=True)
+    library.add_book("	The Wonderful Wizard of Oz", "L. Frank Baum", "9780486291162", silent=True)
+    library.add_book("The Green Mile", "Stephen King", "9780451933027", silent=True)
+    while True:
+        print("\n=== Library Book Tracker ===")
+        print("1. Add Book")
+        print("2. View All Books")
+        print("3. Check Out Book")
+        print("4. Return Book")
+        print("5. Exit")
+
+        choice = input("Enter your choice (1-5): ")
+
+        if choice == '1':
+            title = input("Enter book title: ")
+            author = input("Enter book author: ")
+            isbn = input("Enter book ISBN: ")
+            library.add_book(title, author, isbn)
+
+        elif choice == '2':
+            library.view_books()
+
+        elif choice == '3':
+            isbn = input("Enter ISBN of the book to check out: ")
+            borrower = input("Enter name of borrower: ")
+            library.check_out_book(isbn, borrower)
+
+        elif choice == '4':
+            isbn = input("Enter ISBN of the book to return: ")
+            library.return_book(isbn)
+
+        elif choice == '5':
+            print("Exiting the system. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Please enter a number between 1 and 5.")
+
+
+if __name__ == "__main__":
+    main()
